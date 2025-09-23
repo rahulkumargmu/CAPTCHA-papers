@@ -1,0 +1,23 @@
+📑 Summary   ￼
+
+Methodology
+	•	Proposes MI-CAPTCHA, a CAPTCHA family built from Mooney Images (MIs)—black/white, patchy images that humans can parse via top-down feedback but ML models struggle with.
+	•	Introduces HiMI, a two-stage MI generator:
+	1.	CQNet (UNeXt auto-encoder + VGG19 content loss) performs 1-bit color quantization while preserving semantic structure (defines palette via soft assignments and reconstructs a quantized image).
+	2.	PDA module adjusts perceived difficulty with two knobs: α (recognition) merges/splits foreground speckle clusters to add/remove edges; β (saliency) controls background speckle density by moving C-type patches from FG→BG; both operate on a pixel-cluster adjacency graph built from k-bit quantization + segmentation.
+	•	Designs two reCAPTCHA-style schemes:
+Scheme-1 (Detection): pick all MIs containing a target object (4 images grid).
+Scheme-2 (Segmentation): click red dots that fall inside the object in a single MI.  ￼
+
+Steps
+	1.	Generate MI datasets from Animal2K and MS-COCO with varied α, β, and binarization (B⁺/B⁻).
+	2.	Image-quality evaluation: (i) VGG-based content/style losses; (ii) user study (n=120) measuring recognition time and accuracy.
+	3.	Defense evaluation: fine-tune YOLOv8 and DINO on NI vs MI for detection; assess YOLO and SAM for instance segmentation (IoU).
+	4.	Parameter analysis: in Scheme-1 vary the number of positives M∈{1,2,3,4} and measure human success rate/time vs YOLO.  ￼
+
+Results
+	•	Quality (VGG losses): HiMI achieves the lowest content/style losses among baselines (e.g., content loss ≈ 1.02–1.05 vs ≥1.16 for others).  ￼
+	•	User study: HiMI MIs yield 13 s median recognition time with 0.937 accuracy, substantially better than PhotoMI/UST variants (e.g., 29–71 s, 0.023–0.359 accuracy).  ￼
+	•	Defense (Detection): On COCO, NI accuracy ~0.67–0.67 (YOLO/DINO); with HiMI MIs it drops to 0.249–0.258 (best among MI methods). Similar drops on Animal2K (0.311–0.324).  ￼
+	•	Defense (Segmentation): Mean IoU plunges from 0.974/0.986 (NI) to 0.216/0.104 (HiMI) for YOLO/SAM—strongest degradation among compared MI generators.  ￼
+	•	Scheme-1 configuration: Setting M=2 maximizes the human–solver gap while keeping human SR high (e.g., 0.763 human SR vs 0.105 YOLO). 
