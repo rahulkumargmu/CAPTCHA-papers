@@ -1,2 +1,2 @@
-# CPTCHA-papers
+# CAPTCHA-papers
 List of research papers related to Captcha
